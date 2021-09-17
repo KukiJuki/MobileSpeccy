@@ -364,7 +364,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
     }
     if (event->type() == QEvent::KeyRelease) {
             QKeyEvent *ke = static_cast<QKeyEvent*>(event);
-            qDebug() << "Key released: " << ke->nativeScanCode();
+           // qDebug() << "Key released: " << ke->nativeScanCode();
             auto sc = ke->nativeScanCode();
 
             switch (sc){
@@ -545,13 +545,13 @@ void MainWindow::reset() //for reset button
 
 void MainWindow::on_key_pressed(int row, int col)
 {
-   qDebug() << "Key pressed: " << row << " " << col;
+  // qDebug() << "Key pressed: " << row << " " << col;
     bus->key_press(row, col);
 }
 
 void MainWindow::on_key_released(int row, int col)
 {
-   qDebug() << "Key released: "<< row << " " << col;
+ //  qDebug() << "Key released: "<< row << " " << col;
     bus->key_release(row,col);
 }
 

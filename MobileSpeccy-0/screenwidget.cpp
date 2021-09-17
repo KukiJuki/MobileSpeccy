@@ -1,6 +1,7 @@
 #include "screenwidget.h"
 #include <QPainter>
 #include <algorithm>
+#include <iostream>
 
 //цветовая модель GRB
 static const QColor s_palette[16] {
@@ -20,7 +21,7 @@ static const QColor s_palette[16] {
     QColor( 96, 255,  96),
     QColor( 96, 255, 255),
     QColor(255, 255,  96),
-    QColor(255, 255, 255),
+    QColor(255, 255, 255)
 };
 
 
@@ -36,13 +37,53 @@ void ScreenWidget::setBusInterface(const BusInterface *bi)
     _bi = bi;
 }
 
+int i=0;
+int stageNum=-1;
+
+
 void ScreenWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
     QPainter p(this);
-    p.fillRect(rect(), s_palette[_bi->border()]);
 
+    std::cout << _bi->border() << std::endl;
+    if(_bi->border()==2 || _bi->border()==5) {
+        const int linesCount = 32;
+        const int lineHeight=height()/linesCount;
+        const int animationSpeed=7;
+        if(++i==animationSpeed) i=0;
+        p.fillRect(rect(),s_palette[5]);
+
+        for(int j=-1;j<(linesCount/2);j++){
+            p.fillRect(0,lineHeight*2*(i+animationSpeed*j)/animationSpeed,width(),lineHeight,s_palette[2]);
+        }
+
+    }else if(_bi->border()==1 || _bi->border()==6){
+        const int linesCount = 128;
+        const int lineHeight=height()/linesCount;
+        const int animationSpeed=5;
+        if(++i==animationSpeed) i=0;
+        p.fillRect(rect(),s_palette[1]);
+
+        for(int j=-1;j<(linesCount/2);j++){
+            p.fillRect(0,lineHeight*2*(i+animationSpeed*j)/animationSpeed,width(),lineHeight,s_palette[6]);
+        }
+
+    }else{
+        i=0;
+    }
+
+    //p.fillRect(rect(),s_palette[_bi->border()]);
+
+    //int amount
+
+    //p.fillRect(rect(), s_palette[_bi->border()]);
+
+    /*
+
+
+*/
     int nw, nh, n; //n - сторона изображаемого пикселя
 
     nw = (width() - 2 * BORDER_MIN_WIDTH) / SCREEN_WIDTH;

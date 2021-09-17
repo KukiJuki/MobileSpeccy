@@ -2,6 +2,7 @@
 #define RAMDEVICE_H
 
 #include "busdevice.h"
+#include <QVector>
 
 class RAMDevice : public BusDevice
 {
