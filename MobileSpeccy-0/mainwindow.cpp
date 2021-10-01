@@ -364,7 +364,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
     }
     if (event->type() == QEvent::KeyRelease) {
             QKeyEvent *ke = static_cast<QKeyEvent*>(event);
-           // qDebug() << "Key released: " << ke->nativeScanCode();
+            //qDebug() << "Key released: " << ke->nativeScanCode();
             auto sc = ke->nativeScanCode();
 
             switch (sc){
@@ -521,7 +521,13 @@ void MainWindow::load_scr(const QString &filename)
 
 void MainWindow::frameRefresh()
 {
-    z80_run(&cpustate, 70000 - 28);
+
+    //z80_run(&cpustate, 70000 - 28);
+    for(int i=0;i<ScreenWidget::SCREEN_VERTICAL_LINES;i++){
+        z80_run(&cpustate, 224);
+        ui->screen->borderArray[i]=ui->screen->_bi->border();
+    }
+
     z80_int(&cpustate, 1);
     z80_run(&cpustate, 28);
     z80_int(&cpustate, 0);
@@ -545,13 +551,13 @@ void MainWindow::reset() //for reset button
 
 void MainWindow::on_key_pressed(int row, int col)
 {
-  // qDebug() << "Key pressed: " << row << " " << col;
+   //qDebug() << "Key pressed: " << row << " " << col;
     bus->key_press(row, col);
 }
 
 void MainWindow::on_key_released(int row, int col)
 {
- //  qDebug() << "Key released: "<< row << " " << col;
+   //qDebug() << "Key released: "<< row << " " << col;
     bus->key_release(row,col);
 }
 

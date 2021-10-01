@@ -47,13 +47,14 @@ void ScreenWidget::paintEvent(QPaintEvent *event)
 
     QPainter p(this);
 
+    /*
     std::cout << _bi->border() << std::endl;
     if(_bi->border()==2 || _bi->border()==5) {
         const int linesCount = 32;
         const int lineHeight=height()/linesCount;
-        const int animationSpeed=7;
+        const int animationSpeed=10; // more - smoother
         if(++i==animationSpeed) i=0;
-        p.fillRect(rect(),s_palette[5]);
+            p.fillRect(rect(),s_palette[5]);
 
         for(int j=-1;j<(linesCount/2);j++){
             p.fillRect(0,lineHeight*2*(i+animationSpeed*j)/animationSpeed,width(),lineHeight,s_palette[2]);
@@ -62,7 +63,7 @@ void ScreenWidget::paintEvent(QPaintEvent *event)
     }else if(_bi->border()==1 || _bi->border()==6){
         const int linesCount = 128;
         const int lineHeight=height()/linesCount;
-        const int animationSpeed=5;
+        const int animationSpeed=5; // more - smoother
         if(++i==animationSpeed) i=0;
         p.fillRect(rect(),s_palette[1]);
 
@@ -73,6 +74,7 @@ void ScreenWidget::paintEvent(QPaintEvent *event)
     }else{
         i=0;
     }
+    */
 
     //p.fillRect(rect(),s_palette[_bi->border()]);
 
@@ -80,22 +82,26 @@ void ScreenWidget::paintEvent(QPaintEvent *event)
 
     //p.fillRect(rect(), s_palette[_bi->border()]);
 
-    /*
+    //int nw, nh, n; //n - сторона изображаемого пикселя
 
+    //nw = (width() - 2 * BORDER_MIN_WIDTH) / SCREEN_WIDTH;
+    //nh = (height()) / (SCREEN_HEIGHT+SCREEN_HEIGHT_BOTTOM+SCREEN_HEIGHT_TOP);
 
-*/
-    int nw, nh, n; //n - сторона изображаемого пикселя
-
-    nw = (width() - 2 * BORDER_MIN_WIDTH) / SCREEN_WIDTH;
-    nh = (height() - 2 * BORDER_MIN_HEIGHT) / SCREEN_HEIGHT;
-    n = std::min(nw, nh);
+    int n = (height()) / (SCREEN_VERTICAL_LINES);
     if (n < 1) n = 1;
+
+    // Каждую линию рисуем собственным цветом, который был считан в mainwindow.cpp раз в 224 тактов (448, как было предложено, не работает)
+    for(int i=0;i<ScreenWidget::SCREEN_VERTICAL_LINES;i++) {
+        p.fillRect(
+                    0,
+                    (i-1)*n,
+                    width(),
+                    n,s_palette[borderArray[i]]);
+    }
 
     int ox, oy;
     ox = (width() - SCREEN_WIDTH * n) / 2;
-    oy = (height() - SCREEN_HEIGHT * n) / 2;
-
-
+    oy = SCREEN_HEIGHT_TOP * n;
 
     auto fb = _bi->frameBuffer();
     const uint8_t * pixel_data = &fb[0];
